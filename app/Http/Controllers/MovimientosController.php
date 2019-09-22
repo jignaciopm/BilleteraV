@@ -26,8 +26,8 @@ class MovimientosController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        //$this->middleware('jwt.auth'/*, ['except' => ['login']]*/);
+        //$this->middleware('auth');
+        $this->middleware('jwt.auth'/*, ['except' => ['login']]*/);
     }
 
     public function index(Request $request, $user_id = null)
@@ -57,6 +57,7 @@ class MovimientosController extends Controller
 
     public function amountTotal(Request $request)
     {
+        $result = [];
         $movimientos = Movimiento::where('id','>=',1);
 
         /*
@@ -64,62 +65,21 @@ class MovimientosController extends Controller
             $movimientos = $movimientos->where('id_user',$user_id);
         */
 
-        $movimientos = filtersModel($movimientos, $request);
-
-        return response()->json($movimientos->get()->sum('monto'));
-    }
-
-    public function registrarMovimiento()
-    {
-    	return view("auth.movimientos.registrar-movimiento");
-    }
-
-    public function registrarMovimientoPost(Request $request)
-    {
-    	$reglas = [
-			'fecha' => 'required|date_format:Y-m-d',
-			'concepto' => 'required|string',
-	        'tipo' => 'required|in:+,-',
-	        'monto' => 'required|numeric',
-            'medio' => 'required|in:efectivo,transferencia'
-	    ];
-
-        if($request['tipo'] == "-")
-            $reglas['gasto'] = "required|in:Hogar,Carro,Medicinas,Ayuda familiar,Salida,Comisiones,Cambios,Prestamos,Otros";
-
-        if($request['medio'] == "transferencia")
-            $reglas['banco'] = "required|in:BanPan,Chase,BofA";
-
-        $credentials = $this->validate(request(), $reglas);
-
-        $newMovimiento = [
-            'id_user'     => (int)auth()->user()->id,
-            'fecha'		  => $credentials["fecha"],
-            'concepto'	  => $credentials["concepto"],
-            'tipo'		  => $credentials["tipo"],
-            'monto' 	  => $credentials["monto"],
-            'medio'       => $credentials["medio"]
-        ];
-
-        if($credentials["tipo"] == "-")
-        	$newMovimiento["gasto"] = $credentials["gasto"];
-        
-        if($credentials['medio'] == "transferencia")
-        	$newMovimiento["banco"] = $credentials["banco"];
-
-	    $movimiento = Movimiento::create($newMovimiento);
-
-        if(isset($request['deudor']))
+        if($request->has('mes'))
         {
-            $idDeudor = $request['deudor'];
-            $deudorById = Deudor::where('id',$idDeudor);
-
-            if($deudorById->first())
-                $deudorById->delete();
+            $meses = explode(',', $request->get('mes'));
+            foreach ($meses as $mes) {
+                if($mes != "" && $mes != null)
+                {
+                    $cloneMovimientos = clone $movimientos;
+                    $result[$mes] = filtersModel($cloneMovimientos, $request, $mes)->get()->sum('monto');
+                }
+            }
         }
+        else
+            $result[] = filtersModel($movimientos, $request)->get()->sum('monto');
 
-        session()->flash("success-registrar-movimiento", "");
-        return redirect()->route("registrar-movimiento");
+        return response()->json($result);
     }
 
     public function store(Request $request)
@@ -166,48 +126,5 @@ class MovimientosController extends Controller
         }
 
         return response()->json(['success' => true, 'movimiento' => $movimiento]);
-    }
-
-    public function modificarMovimiento($id)
-    {
-        $movimiento = Movimiento::where("id","=",$id)->first();
-
-        $movimiento["concepto"] = decrypt($movimiento["concepto"]);
-        $movimiento["monto"] = decrypt($movimiento["monto"]);
-
-        return view("auth.movimientos.modificar-movimiento")->with("movimiento",$movimiento);
-    }
-
-    public function modificarMovimientoPost($id, Request $request)
-    {
-        $reglas = [
-            'fecha' => 'required|date_format:Y-m-d',
-            'concepto' => 'required|string',
-            'tipo' => 'required|in:+,-',
-            'monto' => 'required|numeric'
-        ];
-
-        $referenciasEcrypt = [];
-        $referencias = $request["referencia"];
-
-        foreach ($referencias as $primaryKey => $referencia) {
-            foreach ($referencia as $key => $value) {
-                if($key == "denominacion" && $value == null)
-                    $reglas["referencia[".$primaryKey."][".$key."]"] = 'required|numeric';
-                elseif($key == "serial" && $value == null)
-                    $reglas["referencia[".$primaryKey."][".$key."]"] = 'required|string';
-
-                $referenciasEcrypt[$primaryKey][$key] = encrypt($value);
-            }
-        }
-
-        $credentials = $this->validate(request(), $reglas);
-
-        $movimiento = Movimiento::where("id", "=", $id)->update(array(
-            'referencia'  => json_encode($referenciasEcrypt)
-        ));
-
-        session()->flash("success-registrar-movimiento", "");
-        return redirect()->route("modificar-movimiento", $id);
     }
 }

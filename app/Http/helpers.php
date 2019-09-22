@@ -16,7 +16,35 @@ function containSearch($search, $string)
     return preg_match("/".strtolower($search)."/", strtolower($string));
 }
 
-function filtersModel($model, Request $request)
+function filterModelByMonth($model, $mes)
+{
+    if(strtolower($mes) == "enero" || $mes == 1)
+        $model = $model->whereMonth('fecha','01');
+    elseif(strtolower($mes) == "febrero" || $mes == 2)
+        $model = $model->whereMonth('fecha','02');
+    elseif(strtolower($mes) == "marzo" || $mes == 3)
+        $model = $model->whereMonth('fecha','03');
+    elseif(strtolower($mes) == "abril" || $mes == 4)
+        $model = $model->whereMonth('fecha','04');
+    elseif(strtolower($mes) == "mayo" || $mes == 5)
+        $model = $model->whereMonth('fecha','05');
+    elseif(strtolower($mes) == "junio" || $mes == 6)
+        $model = $model->whereMonth('fecha','06');
+    elseif(strtolower($mes) == "julio" || $mes == 7)
+        $model = $model->whereMonth('fecha','07');
+    elseif(strtolower($mes) == "agosto" || $mes == 8)
+        $model = $model->whereMonth('fecha','08');
+    elseif(strtolower($mes) == "septiembre" || $mes == 9)
+        $model = $model->whereMonth('fecha','09');
+    elseif(strtolower($mes) == "octubre" || $mes == 10)
+        $model = $model->whereMonth('fecha','10');
+    elseif(strtolower($mes) == "noviembre" || $mes == 11)
+        $model = $model->whereMonth('fecha','11');
+    elseif(strtolower($mes) == "diciembre" || $mes == 12)
+        $model = $model->whereMonth('fecha','12');
+}
+
+function filtersModel($model, Request $request, $mes = null)
 {
     if($request->has('fecha'))
     {
@@ -60,34 +88,16 @@ function filtersModel($model, Request $request)
         $model = $model->where('es_mensualidad',$es_mensualidad);
     }
 
-    if($request->has('mes'))
+    if($mes == null)
     {
-        $mes = $request->get('mes');
-        if(strtolower($mes) == "enero" || $mes == 1)
-            $model = $model->whereMonth('fecha','01');
-        elseif(strtolower($mes) == "febrero" || $mes == 2)
-            $model = $model->whereMonth('fecha','02');
-        elseif(strtolower($mes) == "marzo" || $mes == 3)
-            $model = $model->whereMonth('fecha','03');
-        elseif(strtolower($mes) == "abril" || $mes == 4)
-            $model = $model->whereMonth('fecha','04');
-        elseif(strtolower($mes) == "mayo" || $mes == 5)
-            $model = $model->whereMonth('fecha','05');
-        elseif(strtolower($mes) == "junio" || $mes == 6)
-            $model = $model->whereMonth('fecha','06');
-        elseif(strtolower($mes) == "julio" || $mes == 7)
-            $model = $model->whereMonth('fecha','07');
-        elseif(strtolower($mes) == "agosto" || $mes == 8)
-            $model = $model->whereMonth('fecha','08');
-        elseif(strtolower($mes) == "septiembre" || $mes == 9)
-            $model = $model->whereMonth('fecha','09');
-        elseif(strtolower($mes) == "octubre" || $mes == 10)
-            $model = $model->whereMonth('fecha','10');
-        elseif(strtolower($mes) == "noviembre" || $mes == 11)
-            $model = $model->whereMonth('fecha','11');
-        elseif(strtolower($mes) == "diciembre" || $mes == 12)
-            $model = $model->whereMonth('fecha','12');
+        if($request->has('mes'))
+        {
+            $mes = $request->get('mes');
+            filterModelByMonth($model, $mes);
+        }
     }
+    else 
+        filterModelByMonth($model, $mes);
 
     if($request->has('anio'))
     {
