@@ -32,7 +32,7 @@ class MovimientosController extends Controller
 
     public function index(Request $request, $user_id = null)
     {
-        $movimientos = Movimiento::where('id','>=',1);
+        $movimientos = Movimiento::where('id','>=',1)->orderBy('fecha','DESC');
         $limit = $request->get('limit') ? $request->get('limit') : 10;
 
         $movimientos = filtersModel($movimientos, $request);
