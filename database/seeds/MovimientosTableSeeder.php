@@ -17,8 +17,20 @@ class MovimientosTableSeeder extends Seeder
             'id_user'     => '1',
             'fecha'		  => now(),
             'concepto'	  => 'Demo',
-            'tipo'		  => '+',
-            'monto' 	  => Hash::make('200') // Hash::make() nos va generar una cadena con nuestra contraseña encriptada
+            'tipo'		  => '-',
+            'monto' 	  => '100',
+            'medio'       => 'Efectivo',
+            'gasto'       => 'Comisiones'
+        )); 
+
+        Movimiento::create(array(
+            'id_user'     => '1',
+            'fecha'		  => now(),
+            'concepto'	  => 'Demo',
+            'tipo'		  => '-',
+            'monto' 	  => '100',
+            'medio'       => 'Efectivo',
+            'gasto'       => 'Medicinas'
         )); 
     }
 }
