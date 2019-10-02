@@ -78,8 +78,8 @@ function filtersModel($model, Request $request, $mes = null)
 
     if($request->has('gasto'))
     {
-        $gasto = $request->get('gasto');
-        $model = $model->where('gasto',$gasto);
+        $gasto = explode(',',$request->get('gasto'));
+        $model = $model->whereIn('gasto',$gasto);
     }
 
     if($request->has('es_mensualidad'))
