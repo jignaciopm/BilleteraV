@@ -96,7 +96,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Set the user's first name.
+     * Set the user's password bcrypted.
      *
      * @param  string  $value
      * @return void
