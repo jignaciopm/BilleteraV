@@ -109,3 +109,34 @@ function filtersModel($model, Request $request, $mes = null)
 
     return $model;
 }
+
+function getExpensesTypeNames() {
+    return [
+        'Hogar',
+        'Carro', 
+        'Medicinas', 
+        'Ayuda familiar', 
+        'Salida', 
+        'Comisiones', 
+        'Cambios', 
+        'Prestamos', 
+        'Otros'
+    ];
+}
+
+function getMonthNames() {
+    return [
+        'Enero', 
+        'Febrero', 
+        'Marzo', 
+        'Abril', 
+        'Mayo', 
+        'Junio', 
+        'Julio', 
+        'Agosto', 
+        'Septiembre', 
+        'Octubre', 
+        'Noviembre', 
+        'Diciembre'
+    ];
+}

@@ -36,7 +36,9 @@ class Movimiento extends Model
 
     public function getMontoAttribute($value)
     {
-        return doubleval(decrypt($value));
+        $monto = doubleval(decrypt($value));
+        
+        return $monto;
     }
 
     /**

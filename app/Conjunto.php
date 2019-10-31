@@ -10,8 +10,8 @@ class Conjunto extends Model
 
     protected $fillable = ['id_user', 'id_conjunto'];
 
-    public function user()
+    public function users()
     {
-        return $this->belongsTo('App\User', 'id_user');
+        return $this->hasMany('App\User', 'id');
     }
 }
