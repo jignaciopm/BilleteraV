@@ -28,14 +28,43 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token',
     ];
 
-    public function movimientos()
+    public function movimientos($filters = array())
     {
-        return $this->hasMany('App\Movimiento', 'id_user');
+        $movimientos = $this->hasMany('App\Movimiento', 'id_user');
+
+        foreach ($filters as $column => $value) {
+            $movimientos = $movimientos->where($column, $value);
+        }
+
+        return $movimientos;
     }
 
-    public function conjunto()
+    public function cash($type = null)
     {
-        return $this->hasMany('App\Conjunto', 'id_conjunto');
+        $cash = $this->movimientos()->where('medio','efectivo');
+        
+        if($type != null && ($type == '+' || $type == '-'))
+            $cash = $cash->where('tipo',$type);
+
+        return $cash;
+    }
+
+    public function transfer($type = null, $bank = null)
+    {
+        $transfer = $this->movimientos()->where('medio','transferencia');
+        
+        if($type != null && ($type == '+' || $type == '-'))
+            $transfer = $transfer->where('tipo',$type);
+
+        if($bank != null && ($bank == 'Chase' || $bank == 'BofA' || $bank == 'BanPan'))
+            $transfer = $transfer->where('banco',$bank);
+
+        return $transfer;
+    }
+
+    public function conjuntos()
+    {
+        return $this->belongsToMany('App\User', 'conjuntos', 'id_user', 'id_conjunto');
     }
 
     public function deudores()

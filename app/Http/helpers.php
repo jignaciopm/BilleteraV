@@ -99,3 +99,36 @@ function filtersModel($model, Request $request)
 
     return $model;
 }
+
+/*function ($movimientos) {
+    foreach ($movimientos as $movimiento) 
+    {
+        if($movimiento["medio"] == "efectivo")
+        {
+            $movimiento["monto"] = $movimiento["monto"];
+            if ($movimiento["tipo"] == "+") {
+                $efectivo += $movimiento["monto"];
+            }
+            elseif ($movimiento["tipo"] == "-") {
+                $efectivo -= $movimiento["monto"];
+            }
+        }
+        elseif($movimiento["medio"] == "transferencia")
+        {
+            $movimiento["monto"] = $movimiento["monto"];
+            if ($movimiento["tipo"] == "+") {
+                $transferencia += $movimiento["monto"];
+                $bancos[$movimiento['banco']] += $movimiento["monto"];
+            }
+            elseif ($movimiento["tipo"] == "-") {
+                $transferencia -= $movimiento["monto"];
+                $bancos[$movimiento['banco']] -= $movimiento["monto"];
+            }
+        }
+
+        $anio = date('Y',strtotime($movimiento['fecha']));
+        $mes = date('m',strtotime($movimiento['fecha']));
+
+        $movimientosPorMes[$anio][$mes][] = $movimiento;
+    }
+}*/

@@ -34,7 +34,7 @@
                             <tbody>
                                 @if(!isset($movimientos) || empty($movimientos) || sizeof($movimientos) <= 0)
                                     <tr>
-                                        <td colspan="5" class="text-center">No posee movimientos registrados</td>
+                                        <td colspan="7" class="text-center">No posee movimientos registrados</td>
                                     </tr>
                                 @endif
                                 @foreach ($movimientos as $movimiento)
@@ -127,22 +127,23 @@
                             <tbody>
                                 @if(!isset($movimientosPorMes) || empty($movimientosPorMes) || sizeof($movimientosPorMes) <= 0)
                                     <tr>
-                                        <td colspan="5" class="text-center">No posee deudores registrados</td>
+                                        <td colspan="9" class="text-center">No posee movimientos registrados</td>
                                     </tr>
+                                @else 
+                                    @foreach ($movimientosPorMes['2019'] as $mes => $movimiento)
+                                        <tr>
+                                            <td>{{date('F', strtotime('0-'.$mes.'-01'))}}</td>
+                                            <td class="text-center">{{$movimiento["ingresos"]}}</td>
+                                            <td class="text-center">{{$movimiento["gastosHogar"]}}</td>
+                                            <td class="text-center">{{$movimiento["gastosCarro"]}}</td>
+                                            <td class="text-center">{{$movimiento["gastosSalida"]}}</td>
+                                            <td class="text-center">{{$movimiento["gastosAyuda"]}}</td>
+                                            <td class="text-center">{{$movimiento["gastosMedicina"]}}</td>
+                                            <td class="text-center">{{$movimiento["otrosGastos"]}}</td>
+                                            <td class="text-center">{{$movimiento["disponible"]}}</td>
+                                        </tr>
+                                    @endforeach
                                 @endif
-                                @foreach ($movimientosPorMes['2019'] as $mes => $movimiento)
-                                    <tr>
-                                        <td>{{date('F', strtotime('0-'.$mes.'-01'))}}</td>
-                                        <td class="text-center">{{$movimiento["ingresos"]}}</td>
-                                        <td class="text-center">{{$movimiento["gastosHogar"]}}</td>
-                                        <td class="text-center">{{$movimiento["gastosCarro"]}}</td>
-                                        <td class="text-center">{{$movimiento["gastosSalida"]}}</td>
-                                        <td class="text-center">{{$movimiento["gastosAyuda"]}}</td>
-                                        <td class="text-center">{{$movimiento["gastosMedicina"]}}</td>
-                                        <td class="text-center">{{$movimiento["otrosGastos"]}}</td>
-                                        <td class="text-center">{{$movimiento["disponible"]}}</td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -151,7 +152,7 @@
         </div>
         <div class="col-lg-3" id="balance">
             <div class="card">
-                <div class="card-header">Balance</div>
+                <div class="card-header">Mi Balance</div>
                 <div class="card-body text-center">
                     <h1>{{$balance}}</h1>
                     <hr>
@@ -173,8 +174,31 @@
                         <h6><small>{{$banco}}:</small> {{$monto}}</h6>
                     @endforeach
                     <hr>
-                    <!-- <h5><small>CONJUNTO:</small> {{$b_conjunto}}</h5> -->
                     <h5><small>DEUDORES:</small> {{$b_deudores}}</h5>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px">
+                <div class="card-header">Balance Conjunto</div>
+                <div class="card-body text-center">
+                    <h1>{{$b_conjunto['disponible']}}</h1>
+                    <hr>
+                    <h5>
+                        <span class="badge badge-light">
+                            <span class="fas fa-money-bill"></span>
+                        </span>
+                        <small>EFECTIVO:</small> {{$b_conjunto['efectivo']}}
+                    </h5>
+                    <h5>
+                        <span class="badge badge-light">
+                            <span class="fas fa-exchange-alt"></span>
+                        </span>
+                        <small>TRANSFERENCIA:</small> {{$b_conjunto['transferencia']}}
+                    </h5>
+                    <hr>
+                    @foreach($bancos as $banco => $monto)
+                        <h6><small>{{$banco}}:</small> {{$b_conjunto['bancos'][$banco]}}</h6>
+                    @endforeach
                 </div>
             </div>
         </div>
