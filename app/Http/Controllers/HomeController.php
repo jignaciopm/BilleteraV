@@ -98,7 +98,7 @@ class HomeController extends Controller
 
         if(!empty($movimientosPorMes)) {
             ksort($movimientosPorMes);
-            ksort($movimientosPorMes['2019']);
+            ksort($movimientosPorMes[now()->format('Y')]);
             foreach ($movimientosPorMes as $keyAnio => $anio)
             {
                 foreach ($anio as $keyMes => $mes)

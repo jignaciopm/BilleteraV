@@ -25,9 +25,9 @@ class DeudoresController extends Controller
 
 	    $deudor = Deudor::create(array(
             'id_user'     => (int)auth()->user()->id,
-            'concepto'	  => encrypt($credentials["concepto"]),
-            'monto' 	  => encrypt($credentials["monto"]),
-            'deudor'  => encrypt($credentials["deudor"])
+            'concepto'	  => $credentials["concepto"],
+            'monto' 	  => $credentials["monto"],
+            'deudor'  => $credentials["deudor"]
         ));
 
         session()->flash("success-registrar-deudor", "");
@@ -37,9 +37,9 @@ class DeudoresController extends Controller
     public function saldarDeudor($idDeudor)
     {
         $deudor = Deudor::where('id',$idDeudor)->first();
-        $deudor["concepto"] = decrypt($deudor["concepto"]);
-        $deudor["monto"] = decrypt($deudor["monto"]);
-        $deudor["deudor"] = decrypt($deudor["deudor"]);
+        $deudor["concepto"] = $deudor["concepto"];
+        $deudor["monto"] = $deudor["monto"];
+        $deudor["deudor"] = $deudor["deudor"];
         return view("auth.movimientos.registrar-movimiento")
                 ->with("deudor", $deudor);
     } 
@@ -59,9 +59,9 @@ class DeudoresController extends Controller
         $movimiento = Movimiento::create(array(
             'id_user'     => (int)auth()->user()->id,
             'fecha'       => $credentials["fecha"],
-            'concepto'    => encrypt($credentials["concepto"]),
+            'concepto'    => $credentials["concepto"],
             'tipo'        => $credentials["tipo"],
-            'monto'       => encrypt($credentials["monto"]),
+            'monto'       => $credentials["monto"],
             'medio'       => $credentials["medio"]
         ));
 

@@ -130,7 +130,7 @@
                                         <td colspan="9" class="text-center">No posee movimientos registrados</td>
                                     </tr>
                                 @else 
-                                    @foreach ($movimientosPorMes['2019'] as $mes => $movimiento)
+                                    @foreach ($movimientosPorMes[now()->format('Y')] as $mes => $movimiento)
                                         <tr>
                                             <td>{{date('F', strtotime('0-'.$mes.'-01'))}}</td>
                                             <td class="text-center">{{$movimiento["ingresos"]}}</td>
